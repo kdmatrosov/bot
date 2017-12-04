@@ -5,7 +5,7 @@ import store from './store';
 import rest from './rest';
 import axios from 'axios';
 import "./styles/main.pcss";
-
+// import "./faker.min";
 
 Vue.prototype.$http = rest;
 Vue.prototype.axios = axios;

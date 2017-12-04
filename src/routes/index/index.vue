@@ -40,7 +40,6 @@
             this.$http.api.get('/users', {})
                 .then((response) => {
                     this.users = response && response.result || [];
-                    CommonFuncs.getBeginningsOfName(this.users[0].name)
                 })
                 .catch((error) => {
                     console.log(error);
@@ -70,12 +69,13 @@
 
     .list-of-users {
         padding: 16px 24px;
-        width: 300px;
+        display: flex;
+        flex-wrap: wrap;
         &__user {
-            &:nth-child(odd) {
-                background-color: #fafafa;
-            }
-            padding: 4px 8px;
+            border: 1px solid #d1d1d1;
+            padding: 16px;
+            margin: 8px;
+            width: 150px;
             &:hover {
                 cursor: pointer;
                 background-color: #eeeeee;

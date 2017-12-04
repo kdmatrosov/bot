@@ -1,33 +1,9 @@
+import faker from 'faker';
+
+console.log(faker);
+
 function Users() {
-    let USERS = [
-        {
-            id: 1,
-            name: 'John Smith',
-            avatarUrl: 'http://99px.ru/sstorage/1/2015/05/image_10705151253382918827.gif',
-            date: '01.01.1970',
-            hobby: 'Pony'
-        },
-        {
-            id: 2,
-            name: 'Alex Black',
-            avatarUrl: 'http://99px.ru/sstorage/1/2016/06/image_10806161457435213399.jpg',
-            date: '01.02.1970'
-        },
-        {
-            id: 3,
-            name: 'James Quick',
-            avatarUrl: 'http://99px.ru/sstorage/1/2016/10/image_1291016132347847071.gif3',
-            date: '02.01.1970',
-            hobby: 'Games'
-        },
-        {
-            id: 4,
-            name: 'Clark Kent',
-            avatarUrl: 'http://99px.ru/sstorage/1/2011/08/image_11308110339454380801.jpg',
-            date: '02.02.1970',
-            hobby: 'Food, tasty food'
-        }
-    ];
+    let USERS = [];
 
     this.data = (user) => {
         if (!!user) {
@@ -36,15 +12,26 @@ function Users() {
                 USERS[index] = {...user};
             }
             else {
-                const MAX_INDEX = Math.max(...USERS.map(u => u.id));
+                const MAX_INDEX = Math.max(...USERS.map(u => u.id).concat([0]));
                 USERS.push({
                     ...user,
-                    id: MAX_INDEX
+                    id: MAX_INDEX + 1
                 });
             }
         } else {
             return ((__USERS) => {
                 let res = [];
+                if (__USERS.length === 0) {
+                    for (let i = 0, len = 10; i < len; i++){
+                        this.data({
+                            name: faker.name.firstName() + ' ' + faker.name.lastName(),
+                            avatarUrl: faker.internet.avatar(),
+                            date: (function (date) {
+                                return `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`.replace(/\b(\d)\b/g, '0$1');
+                            })(faker.date.past())
+                        });
+                    }
+                }
                 __USERS.forEach(u => {
                     res.push(u);
                 });

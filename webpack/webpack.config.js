@@ -7,7 +7,7 @@ const resolve = require('./resolve');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const vendor = [
-    'vue', 'vue-router', 'vuex',
+    'vue', 'vue-router', 'vuex', 'faker',
     'axios', 'lodash', 'jquery'
 ];
 module.exports = {
