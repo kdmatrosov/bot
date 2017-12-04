@@ -10,7 +10,7 @@
             <p><input type="text" name="" id="" class="user-info__name" v-model="user.name"
                       @focus="temp_name = user.name"
                       @blur="user.name = temp_name; temp_name = ''"
-                      @keypress="acceptName($event)" :readonly="!temp_name"></p>
+                      @keypress="acceptName($event)" :readonly="!temp_name || !isAdmin"></p>
             <p>{{user.date}}</p>
         </div>
         <div v-else class="user-info-error">
@@ -22,7 +22,8 @@
 <script>
     import MockAdapter from 'axios-mock-adapter';
 
-    import USERS from '@/CONST/users';
+    import USERS from '@/data/users';
+    import IS_ADMIN from '@/CONST/is_admin';
 
     export default {
         name: 'test',
@@ -31,16 +32,18 @@
                 mock: null,
                 user: {},
                 error: '',
-                temp_name: ''
+                temp_name: '',
+                isAdmin: false
             };
         },
         computed: {},
         mounted() {
             const id = this.$route.params.id;
+            this.isAdmin = this.$route.query.admin === IS_ADMIN;
             this.mock = new MockAdapter(this.$http.api);
             if (!!this.mock) {
                 this.mock.onGet('/user/' + id).reply(200, {
-                    user: USERS.find(user => user.id === +id) || {}
+                    user: USERS.data().find(user => user.id === +id) || {}
                 });
                 this.$http.api.get('/user/' + id, {})
                     .then((response) => {
@@ -57,7 +60,6 @@
             },
             acceptName(e) {
                 if (e.which === 13 && this.mock && !!this.temp_name) {
-                    this.temp_name = this.user.name;
                     this.mock.onPost('/user/' + this.user.id, {
                         name: this.user.name,
                         avatarUrl: this.user.avatarUrl,
@@ -68,10 +70,11 @@
                         name: this.user.name,
                         avatarUrl: this.user.avatarUrl,
                     }).then((response) => {
-                    })
-                        .catch((error) => {
-                            console.log(error);
-                        });
+                        USERS.data(this.user);
+                        this.temp_name = '';
+                    }).catch((error) => {
+                        console.log(error);
+                    });
                 }
             }
         }

@@ -13,7 +13,7 @@
 <script>
     import MockAdapter from 'axios-mock-adapter';
 
-    import USERS from '@/CONST/users';
+    import USERS from '@/data/users';
     export default {
         name: 'test',
         data: function () {
@@ -25,7 +25,7 @@
         mounted() {
             this.mock = new MockAdapter(this.$http.api);
             this.mock.onGet('/users').reply(200, {
-                users: USERS,
+                users: USERS.data(),
                 token: 'it can be usefull'
             });
             this.$http.api.get('/users', {})
