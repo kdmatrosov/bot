@@ -13,6 +13,7 @@
 <script>
     import MockAdapter from 'axios-mock-adapter';
 
+    import USERS from '@/CONST/users';
     export default {
         name: 'test',
         data: function () {
@@ -24,28 +25,7 @@
         mounted() {
             this.mock = new MockAdapter(this.$http.api);
             this.mock.onGet('/users').reply(200, {
-                users: [
-                    {
-                        id: 1,
-                        name: 'John Smith',
-                        avatarUrl: 'http://99px.ru/sstorage/1/2015/05/image_10705151253382918827.gif'
-                    },
-                    {
-                        id: 2,
-                        name: 'Alex Black',
-                        avatarUrl: 'http://99px.ru/sstorage/1/2016/06/image_10806161457435213399.jpg'
-                    },
-                    {
-                        id: 3,
-                        name: 'James Quick',
-                        avatarUrl: 'http://99px.ru/sstorage/1/2016/10/image_1291016132347847071.gif'
-                    },
-                    {
-                        id: 4,
-                        name: 'Clark Kent',
-                        avatarUrl: 'http://99px.ru/sstorage/1/2011/08/image_11308110339454380801.jpg'
-                    }
-                ],
+                users: USERS,
                 token: 'it can be usefull'
             });
             this.$http.api.get('/users', {})

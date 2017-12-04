@@ -1,11 +1,20 @@
 <template>
     <div class="test">
-        <button @click="goToIndex" class="go-to-index">На главную</button>
+        <div style="padding: 16px 64px">
+            <button @click="goToIndex" class="go-to-index">На главную</button>
+        </div>
+
         <div v-if="user.id" class="user-info">
             <div class="user-info__header">Информация о пользователе</div>
             <p><img :src="user.avatarUrl" alt=""></p>
-            <p><input type="text" name="" id="" v-model="user.name" @keypress="acceptName($event)"></p>
+            <p><input type="text" name="" id="" class="user-info__name" v-model="user.name"
+                      @focus="temp_name = user.name"
+                      @blur="user.name = temp_name; temp_name = ''"
+                      @keypress="acceptName($event)" :readonly="!temp_name"></p>
             <p>{{user.date}}</p>
+        </div>
+        <div v-else class="user-info-error">
+            Ошибка доступа к пользователю
         </div>
     </div>
 </template>
@@ -13,39 +22,57 @@
 <script>
     import MockAdapter from 'axios-mock-adapter';
 
+    import USERS from '@/CONST/users';
+
     export default {
         name: 'test',
         data: function () {
             return {
                 mock: null,
                 user: {},
-                error: ''
+                error: '',
+                temp_name: ''
             };
         },
         computed: {},
         mounted() {
             const id = this.$route.params.id;
             this.mock = new MockAdapter(this.$http.api);
-            this.mock.onGet('/user/' + id).reply(200, {
-                user:
-                    {
-                        id: 1,
-                        name: 'John Smith',
-                        avatarUrl: 'http://99px.ru/sstorage/1/2015/05/image_10705151253382918827.gif',
-                        date: '01.01.1970'
-                    }
-            });
-            this.$http.api.get('/user/' + id, {})
-                .then((response) => {
-                    this.user = response && response.user || {};
-                })
-                .catch((error) => {
-                    console.log(error);
+            if (!!this.mock) {
+                this.mock.onGet('/user/' + id).reply(200, {
+                    user: USERS.find(user => user.id === +id) || {}
                 });
+                this.$http.api.get('/user/' + id, {})
+                    .then((response) => {
+                        this.user = response && response.user || {};
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
         },
         methods: {
             goToIndex() {
-                router.push({name: 'index'});
+                this.$router.push({name: 'index'});
+            },
+            acceptName(e) {
+                if (e.which === 13 && this.mock && !!this.temp_name) {
+                    this.temp_name = this.user.name;
+                    this.mock.onPost('/user/' + this.user.id, {
+                        name: this.user.name,
+                        avatarUrl: this.user.avatarUrl,
+                    }).reply(200, {
+                        result: 1
+                    });
+                    this.$http.api.post('/user/' + this.user.id, {
+                        name: this.user.name,
+                        avatarUrl: this.user.avatarUrl,
+                    }).then((response) => {
+                    })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }
             }
         }
     }
@@ -70,9 +97,21 @@
         &__header {
             font-size: 20px;
         }
+        &__name {
+            &[readonly] {
+                border: 0;
+                padding: 0;
+            }
+        }
         p {
             margin: 8px 0;
         }
+    }
+
+    .user-info-error {
+        color: #ff0000;
+        font-size: 24px;
+        padding: 0 64px;
     }
 
 
