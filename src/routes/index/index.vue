@@ -22,7 +22,6 @@
             };
         },
         mounted() {
-
             this.mock = new MockAdapter(this.$http.api);
             this.mock.onGet('/users').reply(200, {
                 users: [
@@ -46,7 +45,8 @@
                         name: 'Clark Kent',
                         avatarUrl: 'http://99px.ru/sstorage/1/2011/08/image_11308110339454380801.jpg'
                     }
-                ]
+                ],
+                token: 'it can be usefull'
             });
             this.$http.api.get('/users', {})
                 .then((response) => {
