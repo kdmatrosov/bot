@@ -12,6 +12,7 @@
                       @blur="user.name = temp_name; temp_name = ''"
                       @keypress="acceptName($event)" :readonly="!temp_name || !isAdmin"></p>
             <p>{{user.date}}</p>
+            <p v-if="user.hobby">My hobby: {{user.hobby}}</p>
         </div>
         <div v-else class="user-info-error">
             Ошибка доступа к пользователю
@@ -101,6 +102,7 @@
             font-size: 20px;
         }
         &__name {
+            height: 20px;
             &[readonly] {
                 border: 0;
                 padding: 0;

@@ -3,7 +3,12 @@
         <h1>Users of Bot#2</h1>
         <div class="list-of-users">
             <div v-for="user in users" class="list-of-users__user" @click="goToUser(user.id)">
-                <img :src="user.avatarUrl">
+                <div class="user-avatar">
+                    <img :src="user.avatarUrl" @error="errorImage(user)" v-if="!user.errorImage">
+                    <div v-else class="user-avatar__empty">
+                        {{user.errorImage}}
+                    </div>
+                </div>
                 <div>{{user.name}}</div>
             </div>
         </div>
@@ -14,6 +19,8 @@
     import MockAdapter from 'axios-mock-adapter';
 
     import USERS from '@/data/users';
+    import CommonFuncs from '@/common/CommonFuncs';
+
     export default {
         name: 'test',
         data: function () {
@@ -31,15 +38,19 @@
             this.$http.api.get('/users', {})
                 .then((response) => {
                     this.users = response && response.users || [];
+                    CommonFuncs.getBeginningsOfName(this.users[0].name)
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
-        methods:{
-            goToUser(id){
+        methods: {
+            goToUser(id) {
 
                 this.$router.push({path: `user/${id}`});
+            },
+            errorImage(user) {
+                this.$set(user, 'errorImage', CommonFuncs.getBeginningsOfName(user.name));
             }
         }
     }
