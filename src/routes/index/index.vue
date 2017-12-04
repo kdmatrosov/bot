@@ -32,12 +32,14 @@
         mounted() {
             this.mock = new MockAdapter(this.$http.api);
             this.mock.onGet('/users').reply(200, {
-                users: USERS.data(),
-                token: 'it can be usefull'
+                result: USERS.data(),
+                nextPageUrl: '',
+                previousPageUrl: ''
+
             });
             this.$http.api.get('/users', {})
                 .then((response) => {
-                    this.users = response && response.users || [];
+                    this.users = response && response.result || [];
                     CommonFuncs.getBeginningsOfName(this.users[0].name)
                 })
                 .catch((error) => {

@@ -50,11 +50,11 @@
             this.mock = new MockAdapter(this.$http.api);
             if (!!this.mock) {
                 this.mock.onGet('/user/' + id).reply(200, {
-                    user: USERS.data().find(user => user.id === +id) || {}
+                    result: USERS.data().find(user => user.id === +id) || {}
                 });
                 this.$http.api.get('/user/' + id, {})
                     .then((response) => {
-                        this.user = response && response.user || {};
+                        this.user = response && response.result || {};
                     })
                     .catch((error) => {
                         console.log(error);
