@@ -5,7 +5,9 @@
         </div>
 
         <div v-if="user.id" class="user-info">
-            <div class="user-info__header" @click="activateAdmin()">Информация о пользователе</div>
+            <div class="user-info__header" :class="[{'--admin': isAdmin}]" @click="activateAdmin()">
+                Информация о пользователе
+            </div>
             <div>
                 <img :src="user.avatarUrl" @error="errorImage(user)" v-if="!user.errorImage">
                 <div v-else class="user-avatar__empty">
@@ -65,9 +67,9 @@
             }
         },
         methods: {
-            activateAdmin(){
+            activateAdmin() {
                 this.count++;
-                if (this.count === 5){
+                if (this.count === 5) {
                     this.isAdmin = true;
                 }
             },
@@ -118,6 +120,10 @@
         padding: 64px;
         &__header {
             font-size: 20px;
+            user-select: none;
+            &.--admin {
+                color: #ff0000;
+            }
         }
         &__name {
             height: 20px;
