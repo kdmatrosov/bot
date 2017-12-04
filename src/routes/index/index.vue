@@ -1,21 +1,65 @@
 <template>
     <div class="test">
-        <h1 @click="msg = 'clicked'">{{ msg }}</h1>
+        <h1>Users of Bot#2</h1>
+        <div class="list-of-users">
+            <div v-for="user in users" class="list-of-users__user" @click="goToUser(user.id)">
+                <img :src="user.avatarUrl">
+                <div>{{user.name}}</div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+    import MockAdapter from 'axios-mock-adapter';
+
     export default {
         name: 'test',
         data: function () {
             return {
-                msg2: 'test'
+                mock: null,
+                users: []
             };
         },
-        computed: {
-            msg ()
-            {
-                return this.$store.state.welcome;
+        mounted() {
+
+            this.mock = new MockAdapter(this.$http.api);
+            this.mock.onGet('/users').reply(200, {
+                users: [
+                    {
+                        id: 1,
+                        name: 'John Smith',
+                        avatarUrl: 'http://99px.ru/sstorage/1/2015/05/image_10705151253382918827.gif'
+                    },
+                    {
+                        id: 2,
+                        name: 'Alex Black',
+                        avatarUrl: 'http://99px.ru/sstorage/1/2016/06/image_10806161457435213399.jpg'
+                    },
+                    {
+                        id: 3,
+                        name: 'James Quick',
+                        avatarUrl: 'http://99px.ru/sstorage/1/2016/10/image_1291016132347847071.gif'
+                    },
+                    {
+                        id: 4,
+                        name: 'Clark Kent',
+                        avatarUrl: 'http://99px.ru/sstorage/1/2011/08/image_11308110339454380801.jpg'
+                    }
+                ]
+            });
+            this.$http.api.get('/users', {})
+                .then((response) => {
+                    this.users = response && response.users || [];
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        methods:{
+            goToUser(id){
+
+                this.$router.push({path: `user/${id}`});
             }
         }
     }
@@ -26,12 +70,24 @@
     .test {
         width: 100%;
         height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        h1 {
+            padding: 0 32px;
+        }
     }
 
-    * {
-        color: #42b983;
+    .list-of-users {
+        padding: 16px 24px;
+        width: 300px;
+        &__user {
+            &:nth-child(odd) {
+                background-color: #fafafa;
+            }
+            padding: 4px 8px;
+            &:hover {
+                cursor: pointer;
+                background-color: #eeeeee;
+            }
+        }
     }
+
 </style>

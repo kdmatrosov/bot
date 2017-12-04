@@ -1,8 +1,8 @@
 import http from './http';
 http
     .rest({
-        name: 'main',
-        baseURL: `main/`,
+        name: 'api',
+        baseURL: `api/`,
         interceptors: [{
             request: function (request) {
 

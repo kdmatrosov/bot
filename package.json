@@ -69,6 +69,7 @@
     "vuex": "^2.2.1"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.10.0",
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.1",
     "babel-plugin-istanbul": "^4.1.1",
