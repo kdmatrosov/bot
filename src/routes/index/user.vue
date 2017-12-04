@@ -6,7 +6,12 @@
 
         <div v-if="user.id" class="user-info">
             <div class="user-info__header">Информация о пользователе</div>
-            <p><img :src="user.avatarUrl" alt=""></p>
+            <div>
+                <img :src="user.avatarUrl" @error="errorImage(user)" v-if="!user.errorImage">
+                <div v-else class="user-avatar__empty">
+                    {{user.errorImage}}
+                </div>
+            </div>
             <p><input type="text" name="" id="" class="user-info__name" v-model="user.name"
                       @focus="temp_name = user.name"
                       @blur="user.name = temp_name; temp_name = ''"
@@ -25,6 +30,7 @@
 
     import USERS from '@/data/users';
     import IS_ADMIN from '@/CONST/is_admin';
+    import CommonFuncs from '@/common/CommonFuncs';
 
     export default {
         name: 'test',
@@ -77,6 +83,9 @@
                         console.log(error);
                     });
                 }
+            },
+            errorImage(user) {
+                this.$set(user, 'errorImage', CommonFuncs.getBeginningsOfName(user.name));
             }
         }
     }
