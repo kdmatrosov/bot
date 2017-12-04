@@ -5,7 +5,7 @@
         </div>
 
         <div v-if="user.id" class="user-info">
-            <div class="user-info__header">Информация о пользователе</div>
+            <div class="user-info__header" @click="activateAdmin()">Информация о пользователе</div>
             <div>
                 <img :src="user.avatarUrl" @error="errorImage(user)" v-if="!user.errorImage">
                 <div v-else class="user-avatar__empty">
@@ -16,7 +16,9 @@
                       @focus="temp_name = user.name"
                       @blur="user.name = temp_name; temp_name = ''"
                       @keypress="acceptName($event)" :readonly="!temp_name || !isAdmin"></p>
-            <p>{{user.date}}</p>
+            <p>BirthDay: {{user.date}}</p>
+            <p>Country: {{user.country}}</p>
+            <p>Email: {{user.email}}</p>
             <p v-if="user.hobby">My hobby: {{user.hobby}}</p>
         </div>
         <div v-else class="user-info-error">
@@ -40,7 +42,8 @@
                 user: {},
                 error: '',
                 temp_name: '',
-                isAdmin: false
+                isAdmin: false,
+                count: 0
             };
         },
         computed: {},
@@ -62,6 +65,12 @@
             }
         },
         methods: {
+            activateAdmin(){
+                this.count++;
+                if (this.count === 5){
+                    this.isAdmin = true;
+                }
+            },
             goToIndex() {
                 this.$router.push({name: 'index'});
             },
